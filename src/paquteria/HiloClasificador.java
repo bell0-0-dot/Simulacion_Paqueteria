@@ -13,13 +13,15 @@ public class HiloClasificador extends Thread{
     private final int id;
     private final ListaEnlazada<Paquete> listaAlmacen;
     private final ListaEnlazada<Paquete> listaEmpaquetado;
+    private final ListaEnlazada<Paquete> listaClasificacion;
     private final Control control;
     private final RegistroEventos registro;
     
     
-    public HiloClasificador(int id, ListaEnlazada<Paquete> listaAlmacen, ListaEnlazada<Paquete> listaEmpaquetado, Control control, RegistroEventos registro) {
+    public HiloClasificador(int id, ListaEnlazada<Paquete> listaAlmacen,ListaEnlazada<Paquete>listaClasificacion, ListaEnlazada<Paquete> listaEmpaquetado, Control control, RegistroEventos registro) {
         this.id = id;
         this.listaAlmacen = listaAlmacen;
+        this.listaClasificacion=listaClasificacion;
         this.listaEmpaquetado = listaEmpaquetado;
         this.control = control;
         this.registro = registro;
@@ -35,7 +37,7 @@ public class HiloClasificador extends Thread{
                 }
 
                 Paquete p = listaAlmacen.removerEsperando();
-                
+                listaClasificacion.agregarEsperando(p);
                 p.cambiarEstado(EstadoPaqueteEnum.CLASIFICANDO);
                 registro.log(p.getCodigo() + "tomado para Clasificador-" + id);
 
@@ -46,6 +48,7 @@ public class HiloClasificador extends Thread{
                 p.cambiarEstado(EstadoPaqueteEnum.CLASIFICADO);
                 registro.log(p.getCodigo() + " clasificado -> " + ruta);
 
+                listaClasificacion.eliminar(p);
                 listaEmpaquetado.agregarEsperando(p);
             }
         } catch (InterruptedException e) {

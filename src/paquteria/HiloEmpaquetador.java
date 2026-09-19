@@ -36,10 +36,13 @@ public class HiloEmpaquetador extends Thread{
                 registro.log(p.getCodigo() + " en empaquetado (Empaquetador-" + id + ")");
 
                 Thread.sleep(calcularTiempo(p.getPeso()));
-
+                
+                
                 p.cambiarEstado(EstadoPaqueteEnum.EMPAQUETADO);
+                listaEmpaquetado.eliminar(p);
+                listaExpedicion.agregarEsperando(p);
                 registro.log(p.getCodigo() + " empaquetado");
-
+              
                 p.cambiarEstado(EstadoPaqueteEnum.EN_EXPEDICION);
                 listaExpedicion.agregarEsperando(p);
                 registro.log(p.getCodigo() + " en expedición -> " + p.getRuta());

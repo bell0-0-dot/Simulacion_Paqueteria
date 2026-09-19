@@ -38,6 +38,7 @@ public class HiloRecepcion extends Thread {
 
                 Paquete p = generarPaqueteAleatorio();
                 listaRecepcion.agregarEsperando(p);
+                p.cambiarEstado(EstadoPaqueteEnum.RECIBIDO);
                 registro.log(p.getCodigo() + " recibido");
 
                 
@@ -50,6 +51,7 @@ public class HiloRecepcion extends Thread {
                             p.cambiarEstado(EstadoPaqueteEnum.ALMACENADO);
                             listaRecepcion.eliminar(p);
                             listaAlmacen.agregarEsperando(p);
+                            p.cambiarEstado(EstadoPaqueteEnum.ALMACENADO);
                             registro.log(p.getCodigo() + " almacenado");
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();

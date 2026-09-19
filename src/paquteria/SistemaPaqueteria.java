@@ -11,7 +11,7 @@ package paquteria;
 public class SistemaPaqueteria {
     private ListaEnlazada<Paquete> listaRecepcion;
     private ListaEnlazada<Paquete> listaAlmacen;
-   private ListaEnlazada<Paquete> listaClasificacion; 
+    private ListaEnlazada<Paquete> listaClasificacion; 
     private ListaEnlazada<Paquete> listaEmpaquetado;
     private ListaEnlazada<Paquete> listaExpedicion;
     private ListaEnlazada<Paquete> listaEntregados;
@@ -41,6 +41,7 @@ public class SistemaPaqueteria {
     private void inicializarEstructuras() {
         listaRecepcion = new ListaEnlazada<>(capacidad_recepcion);
         listaAlmacen = new ListaEnlazada<>(capacidad_almacen);
+        listaClasificacion = new ListaEnlazada<>(capacidad_clasificacion);
         listaEmpaquetado = new ListaEnlazada<>(capacidad_empaquetado);
         listaExpedicion = new ListaEnlazada<>(capacidad_expedicion);
         listaEntregados = new ListaEnlazada<>();
@@ -56,7 +57,7 @@ public class SistemaPaqueteria {
         hiloRecepcion = new HiloRecepcion(listaRecepcion, listaAlmacen, control, registro);
 
         for (int i = 1; i <= 3; i++) {
-            clasificadores.agregar(new HiloClasificador(i, listaAlmacen, listaEmpaquetado, control, registro));
+            clasificadores.agregar(new HiloClasificador(i, listaAlmacen,listaClasificacion, listaEmpaquetado, control, registro));
         }
 
         for (int i = 1; i <= 2; i++) {
@@ -153,6 +154,9 @@ public class SistemaPaqueteria {
     public Repartidor[] getRepartidores() { 
         return repartidores.aArreglo(new Repartidor[0]);
     }
+    public Paquete[] getClasificacion() {
+        return listaClasificacion.aArreglo(new Paquete[0]);
+}
      
     public int getTotalGenerados() {
         return listaEntregados.size() + listaDevueltos.size() + listaRecepcion.size() + listaAlmacen.size() + listaEmpaquetado.size() + listaExpedicion.size();
